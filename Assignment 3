@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void heapifyUpMax(vector<int>& heap, int index) {
+    while (index > 0 && heap[index] > heap[(index - 1) / 2]) {
+        swap(heap[index], heap[(index - 1) / 2]);
+        index = (index - 1) / 2;
+    }
+}
+
+void heapifyDownMax(vector<int>& heap, int index) {
+    int size = heap.size();
+    while (true) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && heap[left] > heap[largest]) largest = left;
+        if (right < size && heap[right] > heap[largest]) largest = right;
+
+        if (largest != index) {
+            swap(heap[index], heap[largest]);
+            index = largest;
+        } else {
+            break;
+        }
+    }
+}
+
+void insertMaxHeap(vector<int>& heap, int val) {
+    heap.push_back(val);
+    heapifyUpMax(heap, heap.size() - 1);
+}
+
+void deleteRootMaxHeap(vector<int>& heap) {
+    if (heap.empty()) return;
+    heap[0] = heap.back();
+    heap.pop_back();
+    heapifyDownMax(heap, 0);
+}
+
+void printHeap(const vector<int>& heap) {
+    for (int v : heap) cout << v << " ";
+    cout << "\n";
+}
+
+int main() {
+    vector<int> data = {50, 10, 30, 20, 60, 70};
+    vector<int> maxHeap;
+
+    cout << "Building Max-Heap:\n";
+    for (int val : data) {
+        insertMaxHeap(maxHeap, val);
+        printHeap(maxHeap);
+    }
+
+    cout << "Deleting two nodes from Max-Heap:\n";
+    for (int i = 0; i < 2; ++i) {
+        deleteRootMaxHeap(maxHeap);
+        printHeap(maxHeap);
+    }
+
+    return 0;
+}
